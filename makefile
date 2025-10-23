@@ -9,3 +9,6 @@ VENV ?= .venv
 init: .create-venv
 	$(VENV)/bin/python -m pip install toml
 	$(VENV)/bin/poetry install
+
+api:
+	$(VENV)/bin/python -m uvicorn backend.main:app --reload --port 8000

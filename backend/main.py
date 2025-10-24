@@ -4,19 +4,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 MODEL_NAME = "HuggingFaceTB/SmolLM2-135M-Instruct"
-tokenizer = None
-model = None
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
 
 app = FastAPI(title="Local Text Generator API")
-
-# Загрузка при старте приложения
-@app.on_event("startup")
-def load_model():
-    global tokenizer, model
-    print("Loading model...")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-    model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
-    print("Model loaded!")
 
 # Добавляем CORS
 app.add_middleware(
@@ -27,15 +18,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.post("/generate")
 def generate_text(
     prompt: str = Body(..., embed=True),
     max_new_tokens: int = 50,
     temperature: float = 0.7,
 ):
-    if model is None or tokenizer is None:
-        return {"error": "Model not loaded yet"}
-
     inputs = tokenizer(prompt, return_tensors="pt")
     outputs = model.generate(
         **inputs,

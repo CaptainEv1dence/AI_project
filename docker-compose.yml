@@ -1,36 +1,33 @@
-version: '3.8'
+version: '3.9'
 
 services:
   backend:
     build:
-      context: ./backend 
+      context: .
       dockerfile: Dockerfile
+    container_name: ai-backend
     ports:
-      - "8000:8000" 
+      - "8000:8000"
     environment:
-      FRONTEND_URL: http://localhost:3000
-    networks:
-      - app-network
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:
-      context: ./frontend # Path to your frontend's Dockerfile
+      context: ./frontend
       dockerfile: Dockerfile
+    container_name: ai-frontend
     ports:
-      - "3000:3000" # Map host port 3000 to container port 3000
-    environment:
-      # Example environment variables for frontend
-      REACT_APP_API_URL: http://backend:8000 # Use service name for inter-container communication
+      - "3000:3000"
     depends_on:
-      - backend # Ensure backend starts before frontend
-    networks:
-      - app-network
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://backend:8000
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm start
 
-  db:
-    image: project
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge

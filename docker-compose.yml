@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend 
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000" 
+    environment:
+      FRONTEND_URL: http://localhost:3000
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend # Path to your frontend's Dockerfile
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Map host port 3000 to container port 3000
+    environment:
+      # Example environment variables for frontend
+      REACT_APP_API_URL: http://backend:8000 # Use service name for inter-container communication
+    depends_on:
+      - backend # Ensure backend starts before frontend
+    networks:
+      - app-network
+
+  db:
+    image: project
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:

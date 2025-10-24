@@ -1,33 +1,166 @@
-# Getting Started with Create React App
+# Text Generator Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React-based frontend for the AI Text Generation project using SmolLM2-135M-Instruct model.
+
+## Project Overview
+
+This application provides a user-friendly interface for text generation using a pretrained language model. Users can input prompts and adjust generation parameters (temperature, max tokens) to create AI-generated text.
+
+## Prerequisites
+
+- Node.js (version 14.0.0 or higher)
+- Running FastAPI backend at `http://localhost:8000`
+
+## Installation
+
+```bash
+npm install
+```
+
+## Running the Application
+
+### Development Mode
+
+```bash
+npm start
+```
+
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
+
+The page will reload when you make changes. You may also see any lint errors in the console.
+
+### Production Build
+
+```bash
+npm run build
+```
+
+Builds the app for production to the `build` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.
+
+## Backend Setup
+
+Make sure the FastAPI backend is running before starting the frontend:
+
+```bash
+# In the project root directory
+make init
+make api
+```
+
+The backend should be available at `http://localhost:8000`.
+
+## Features
+
+- Text generation with customizable parameters
+- Real-time API communication with FastAPI backend
+- Modern, responsive UI
+- Error handling and loading states
+- Adjustable temperature and token limits
+
+## API Integration
+
+The frontend communicates with the backend via POST requests to `/generate` endpoint:
+
+**Request:**
+```json
+{
+  "prompt": "Your text prompt",
+  "max_new_tokens": 50,
+  "temperature": 0.7
+}
+```
+
+**Response:**
+```json
+{
+  "prompt": "Your text prompt",
+  "generated": "AI-generated text"
+}
+```
+
+## Project Structure
+
+```
+frontend/
+├── public/
+├── src/
+│   ├── App.js          # Main component with API integration
+│   ├── App.css         # Styling
+│   ├── index.js        # Entry point
+│   └── ...
+├── package.json
+└── README.md
+```
+
+## Technologies Used
+
+- React 18
+- Fetch API for HTTP requests
+- CSS3 for styling
+- Create React App for project setup
+
+## Testing
+
+```bash
+npm test
+```
+
+Launches the test runner in interactive watch mode.
+
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+## Troubleshooting
+
+### CORS Errors
+
+If you encounter CORS errors, ensure the backend has CORS middleware configured:
+
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+```
+
+### Backend Not Running
+
+Verify the backend is running at `http://localhost:8000/docs` - you should see the FastAPI interactive documentation.
+
+### Port Already in Use
+
+If port 3000 is already in use, you'll be prompted to use another port. Press `Y` to accept.
+
+## Learn More
+
+- [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started)
+- [React documentation](https://reactjs.org/)
+- [FastAPI documentation](https://fastapi.tiangolo.com/)
 
 ## Available Scripts
 
-In the project directory, you can run:
-
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
+The page will reload when you make changes.
 You may also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in the interactive watch mode.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.
 It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ### `npm run eject`
 
@@ -35,36 +168,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

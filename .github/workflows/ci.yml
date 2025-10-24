@@ -1,0 +1,61 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop, 'feature/*' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        
+    - name: Install dependencies
+      run: |
+        poetry config virtualenvs.create false
+        poetry install --no-interaction
+        pip install pytest pytest-cov httpx
+        
+    - name: Run tests
+      run: |
+        pytest backend/tests/ -v --cov=backend --cov-report=term-missing
+        
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Build Docker image
+      run: |
+        docker build -t ai-project:latest -f backend/Dockerfile .
+        
+    - name: Test Docker image
+      run: |
+        docker run -d -p 8000:8000 --name test-container ai-project:latest
+        sleep 15
+        docker logs test-container
+        docker stop test-container
+        docker rm test-container

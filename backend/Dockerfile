@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY backend/main.py /app/
+COPY main.py /app/
 COPY pyproject.toml poetry.lock* /app/
 
 RUN pip install --upgrade pip

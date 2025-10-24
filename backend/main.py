@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Body
+from fastapi.middleware.cors import CORSMiddleware
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
@@ -7,6 +8,16 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForCausalLM.from_pretrained(MODEL_NAME)
 
 app = FastAPI(title="Local Text Generator API")
+
+# Добавляем CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # React dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.post("/generate")
 def generate_text(
@@ -22,8 +33,6 @@ def generate_text(
         do_sample=True,
         pad_token_id=tokenizer.eos_token_id,
     )
-
     text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    generated = text[len(prompt):]
-
+    generated = text[len(prompt) :]
     return {"prompt": prompt, "generated": generated.strip()}

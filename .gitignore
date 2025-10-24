@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.DS_Store
+*.so
 
 # C extensions
 *.so
@@ -27,8 +27,6 @@ wheels/
 MANIFEST
 
 # PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -84,6 +82,8 @@ celerybeat-schedule
 
 # Environments
 .env
+.env.local
+.env.*.local
 .venv
 env/
 venv/
@@ -103,12 +103,53 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.dmypy.json
+dmypy.json
 
 # IDE
 .idea/
 .vscode/
 .history/
+*.swp
+*.swo
 
+# Cache
 _cache/
-
 changes.txt
+
+# Frontend - Node.js
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+
+# Frontend - npm/yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend - env
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# OS specific
+.DS_Store
+Thumbs.db
+*.DS_Store
+
+# Docker
+.dockerignore
+
+# Package manager lock files for frontend (optional, обычно коммитят)
+# frontend/package-lock.json
+
+# IDE configuration
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
